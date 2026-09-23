@@ -1,0 +1,45 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: cloud4saya-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  backend:
+    build: ./backend
+    container_name: cloud4saya-backend
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-local}
+      MONGODB_URI: ${MONGODB_URI:-mongodb://mongo:27017/cloud4saya_db}
+      MONGODB_DATABASE: ${MONGODB_DATABASE:-cloud4saya_db}
+      SERVER_PORT: "8089"
+      JWT_SECRET: ${JWT_SECRET:-local-dev-only-change-me-0000000000000000000000000000000000000000000000000000}
+      APP_INTERNAL_SECRET: ${APP_INTERNAL_SECRET:-local-dev-internal-secret-change-me}
+      APP_BASE_URL: ${APP_BASE_URL:-http://localhost:4200}
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      MAIL_FROM: ${MAIL_FROM:-noreply@syndiqa.com}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+    ports:
+      - "8089:8089"
+    volumes:
+      - backend-uploads:/app/uploads
+
+  frontend:
+    build: ./frontend
+    container_name: cloud4saya-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "4200:80"
+
+volumes:
+  mongo-data:
+  backend-uploads:

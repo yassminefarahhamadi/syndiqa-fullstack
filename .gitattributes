@@ -1,0 +1,20 @@
+# Normalise line endings to LF across platforms
+* text=auto eol=lf
+
+# Scripts that must keep their EOL
+*.sh   text eol=lf
+*.bat  text eol=crlf
+*.cmd  text eol=crlf
+mvnw   text eol=lf
+
+# Binary assets — never touch
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.pdf  binary
+*.jar  binary
+*.woff binary
+*.woff2 binary
+*.pb   binary

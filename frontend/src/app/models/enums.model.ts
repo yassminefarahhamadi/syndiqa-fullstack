@@ -1,0 +1,49 @@
+export enum EventCategory {
+  MEETING = 'MEETING',
+  SOCIAL = 'SOCIAL',
+  SPORTS = 'SPORTS',
+  MAINTENANCE = 'MAINTENANCE',
+  EMERGENCY = 'EMERGENCY',
+  OTHER = 'OTHER'
+}
+
+export enum EventStatus {
+  DRAFT = 'DRAFT',
+  PUBLISHED = 'PUBLISHED',
+  CANCELLED = 'CANCELLED',
+  COMPLETED = 'COMPLETED'
+}
+
+export enum AnnouncementType {
+  GENERAL = 'GENERAL',
+  EVENT_RELATED = 'EVENT_RELATED',
+  MAINTENANCE = 'MAINTENANCE',
+  EMERGENCY = 'EMERGENCY',
+  NOTICE = 'NOTICE'
+}
+
+export enum Priority {
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
+  HIGH = 'HIGH',
+  URGENT = 'URGENT'
+}
+
+export enum AnnouncementTargetScope {
+  ORGANIZATION = 'ORGANIZATION',
+  BUILDING = 'BUILDING'
+}
+
+export enum ParticipationStatus {
+  REGISTERED = 'REGISTERED',
+  ATTENDED = 'ATTENDED',
+  CANCELLED = 'CANCELLED'
+}
+
+export enum UserRole {
+  SYNDIC_ADMIN = 'SYNDIC_ADMIN',
+  SYNDIC_AGENT = 'SYNDIC_AGENT',
+  RESIDENT_OWNER = 'RESIDENT_OWNER',
+  RESIDENT_TENANT = 'RESIDENT_TENANT',
+  TECHNICAL_STAFF = 'TECHNICAL_STAFF'
+}

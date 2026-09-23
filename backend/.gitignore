@@ -1,0 +1,49 @@
+# Backend (Spring Boot / Maven)
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.properties
+.mvn/wrapper/maven-wrapper.jar
+
+### Java ###
+*.class
+*.jar
+*.war
+*.ear
+hs_err_pid*
+
+### Python AI helper (services/IncidentAlert/aiServices) ###
+__pycache__/
+*.pyc
+tfhub_cache/
+
+### Runtime uploads (keep skeleton) ###
+uploads/**
+!uploads/
+!uploads/**/
+!uploads/**/.gitkeep
+
+### IDE ###
+.idea/
+*.iml
+.vscode/
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+out/
+
+### OS ###
+.DS_Store
+Thumbs.db
+
+### Logs ###
+*.log
+logs/
+
+### Environment ###
+.env
+.env.local
+.env.*.local

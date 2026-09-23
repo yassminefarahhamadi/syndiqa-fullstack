@@ -1,0 +1,9 @@
+.ai-panel {
+    ::ng-deep .p-panel-header {
+        background-color: var(--app-card-header-bg, #f8fafc);
+        border-top: 3px solid #8b5cf6;
+    }
+}
+.card {
+    box-shadow: 0 4px 6px -1px var(--app-shadow, rgb(0 0 0 / 0.1));
+}

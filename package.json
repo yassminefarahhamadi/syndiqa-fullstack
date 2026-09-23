@@ -1,0 +1,27 @@
+{
+  "name": "syndiqa-fullstack",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SyndiQA — smart property & syndicate management platform (Angular 21 + Spring Boot 3.4 + MongoDB)",
+  "scripts": {
+    "install:all": "npm install && npm --prefix frontend install",
+    "dev": "concurrently -k -n BACKEND,FRONTEND -c blue,green \"npm:dev:backend\" \"npm:dev:frontend\"",
+    "dev:backend": "cd backend && mvnw spring-boot:run",
+    "dev:frontend": "npm --prefix frontend start",
+    "build": "npm run build:backend && npm run build:frontend",
+    "build:backend": "cd backend && mvnw -B clean package -DskipTests",
+    "build:frontend": "npm --prefix frontend run build",
+    "test:backend": "cd backend && mvnw -B test",
+    "test:frontend": "npm --prefix frontend test",
+    "seed:demo": "node scripts/seed-demo.mjs",
+    "mock:ai": "node scripts/mock-ai.mjs",
+    "docker:up": "docker compose up --build",
+    "docker:down": "docker compose down"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

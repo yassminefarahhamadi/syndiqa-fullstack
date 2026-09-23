@@ -1,0 +1,250 @@
+// ═══════════════════════════════════════════════════════════
+// GLOBAL DARK MODE VARIABLES & STYLES
+// ═══════════════════════════════════════════════════════════
+
+:root {
+  // Light mode (default)
+  --app-bg: #f8f9fa;
+  --app-surface: #ffffff;
+  --app-text: #1a1a1a;
+  --app-text-secondary: #666666;
+  --app-text-muted: #999999;
+  --app-border: #e0e0e0;
+  --app-border-light: #f0f0f0;
+  --app-shadow: rgba(0, 0, 0, 0.1);
+  --app-shadow-hover: rgba(0, 0, 0, 0.15);
+  
+  // Card backgrounds
+  --app-card-bg: #ffffff;
+  --app-card-header-bg: #f8f9fa;
+  --app-glass-bg: rgba(255, 255, 255, 0.8);
+  --app-glass-border: rgba(0, 0, 0, 0.08);
+  
+  // Interactive elements
+  --app-hover-bg: #f5f5f5;
+  --app-active-bg: #e0e0e0;
+  --app-input-bg: #ffffff;
+  --app-input-border: #e0e0e0;
+  --app-input-focus-border: #667eea;
+  
+  // Status colors (same for both modes)
+  --app-primary: #667eea;
+  --app-primary-hover: #764ba2;
+  --app-success: #10b981;
+  --app-warning: #f59e0b;
+  --app-danger: #ef4444;
+  --app-info: #3b82f6;
+  
+  // Gradients
+  --app-gradient-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  --app-gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  
+  // Chart colors
+  --app-chart-grid: #dee2e6;
+  --app-chart-text: #495057;
+}
+
+// Dark mode overrides
+:host-context(.dark),
+:host-context([data-theme="dark"]),
+.dark,
+[data-theme="dark"] {
+  --app-bg: #0f1419;
+  --app-surface: #1a1f2e;
+  --app-text: #e5e7eb;
+  --app-text-secondary: #9ca3af;
+  --app-text-muted: #6b7280;
+  --app-border: #2d3748;
+  --app-border-light: #374151;
+  --app-shadow: rgba(0, 0, 0, 0.3);
+  --app-shadow-hover: rgba(0, 0, 0, 0.5);
+  
+  // Card backgrounds
+  --app-card-bg: #1a1f2e;
+  --app-card-header-bg: #0f1419;
+  --app-glass-bg: rgba(26, 31, 46, 0.8);
+  --app-glass-border: rgba(255, 255, 255, 0.1);
+  
+  // Interactive elements
+  --app-hover-bg: #2d3748;
+  --app-active-bg: #374151;
+  --app-input-bg: #1a1f2e;
+  --app-input-border: #2d3748;
+  --app-input-focus-border: #667eea;
+  
+  // Gradients for dark mode
+  --app-gradient-bg: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
+  
+  // Chart colors for dark mode
+  --app-chart-grid: #374151;
+  --app-chart-text: #9ca3af;
+}
+
+// Apply dark mode to body and common elements
+.dark,
+[data-theme="dark"] {
+  background: var(--app-bg);
+  color: var(--app-text);
+  
+  // PrimeNG component overrides for dark mode
+  ::ng-deep {
+    // Cards
+    .p-card {
+      background: var(--app-card-bg);
+      color: var(--app-text);
+      border-color: var(--app-border);
+      
+      .p-card-header {
+        background: var(--app-card-header-bg);
+        color: var(--app-text);
+        border-color: var(--app-border);
+      }
+      
+      .p-card-body,
+      .p-card-content {
+        color: var(--app-text);
+      }
+      
+      .p-card-footer {
+        border-color: var(--app-border);
+      }
+    }
+    
+    // Tables
+    .p-datatable {
+      .p-datatable-thead > tr > th {
+        background: var(--app-card-header-bg);
+        color: var(--app-text);
+        border-color: var(--app-border);
+      }
+      
+      .p-datatable-tbody > tr {
+        background: var(--app-card-bg);
+        color: var(--app-text);
+        border-color: var(--app-border);
+        
+        &:hover {
+          background: var(--app-hover-bg);
+        }
+        
+        td {
+          color: var(--app-text);
+          border-color: var(--app-border);
+        }
+      }
+    }
+    
+    // Inputs
+    .p-inputtext,
+    .p-inputnumber-input,
+    .p-dropdown,
+    .p-multiselect,
+    .p-calendar {
+      background: var(--app-input-bg);
+      color: var(--app-text);
+      border-color: var(--app-input-border);
+      
+      &:enabled:focus {
+        border-color: var(--app-input-focus-border);
+      }
+    }
+    
+    // Dialogs
+    .p-dialog {
+      background: var(--app-card-bg);
+      color: var(--app-text);
+      border-color: var(--app-border);
+      
+      .p-dialog-header {
+        background: var(--app-card-header-bg);
+        color: var(--app-text);
+        border-color: var(--app-border);
+      }
+      
+      .p-dialog-content {
+        background: var(--app-card-bg);
+        color: var(--app-text);
+      }
+      
+      .p-dialog-footer {
+        background: var(--app-card-bg);
+        border-color: var(--app-border);
+      }
+    }
+    
+    // Tabs
+    .p-tabs {
+      .p-tabs-nav {
+        background: var(--app-card-bg);
+        border-color: var(--app-border);
+        
+        .p-tab {
+          .p-tab-link {
+            color: var(--app-text-secondary);
+            
+            &:hover {
+              background: var(--app-hover-bg);
+              color: var(--app-text);
+            }
+          }
+          
+          &.p-tab-active .p-tab-link {
+            color: var(--app-primary);
+          }
+        }
+      }
+      
+      .p-tabs-panels {
+        background: var(--app-card-bg);
+        color: var(--app-text);
+      }
+    }
+    
+    // Panels
+    .p-panel {
+      background: var(--app-card-bg);
+      color: var(--app-text);
+      border-color: var(--app-border);
+      
+      .p-panel-header {
+        background: var(--app-card-header-bg);
+        color: var(--app-text);
+        border-color: var(--app-border);
+      }
+      
+      .p-panel-content {
+        background: var(--app-card-bg);
+        color: var(--app-text);
+      }
+    }
+    
+    // Menus
+    .p-menu,
+    .p-menubar,
+    .p-tieredmenu {
+      background: var(--app-card-bg);
+      color: var(--app-text);
+      border-color: var(--app-border);
+      
+      .p-menuitem-link {
+        color: var(--app-text);
+        
+        &:hover {
+          background: var(--app-hover-bg);
+        }
+      }
+    }
+    
+    // Toast
+    .p-toast {
+      .p-toast-message {
+        background: var(--app-card-bg);
+        border-color: var(--app-border);
+        
+        .p-toast-message-content {
+          color: var(--app-text);
+        }
+      }
+    }
+  }
+}

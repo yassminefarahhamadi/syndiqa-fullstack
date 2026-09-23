@@ -1,0 +1,59 @@
+# ═══════════════════════════════════════════════════
+#   CLOUD4SAYA — root .gitignore
+# ═══════════════════════════════════════════════════
+
+# ---- Secrets / local env ----
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# ---- Node / Angular (frontend) ----
+node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/coverage/
+frontend/.nx/
+npm-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ---- Java / Maven (backend) ----
+backend/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+backend/HELP.md
+*.class
+hs_err_pid*
+
+# ---- Python AI helper (backend/.../aiServices) ----
+__pycache__/
+*.pyc
+tfhub_cache/
+*.ipynb_checkpoints/
+
+# ---- Runtime-generated uploads (keep folder skeleton via .gitkeep) ----
+backend/uploads/**
+!backend/uploads/
+!backend/uploads/**/
+!backend/uploads/**/.gitkeep
+
+# ---- IDE / editor ----
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.settings/
+.project
+.classpath
+.factorypath
+.history/
+
+# ---- OS ----
+.DS_Store
+Thumbs.db
+
+# ---- Logs ----
+*.log
+logs/

@@ -1,0 +1,9 @@
+target/
+.git/
+.idea/
+*.iml
+HELP.md
+uploads/
+.mvn/wrapper/maven-wrapper.jar
+src/main/java/tn/esprit/pidev/services/IncidentAlert/aiServices/__pycache__/
+src/main/java/tn/esprit/pidev/services/IncidentAlert/aiServices/tfhub_cache/

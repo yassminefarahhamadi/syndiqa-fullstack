@@ -1,0 +1,479 @@
+<div class="grid grid-cols-12 gap-6">
+  <p-toast />
+
+  <!-- Header Section -->
+  <div class="col-span-12">
+    <div class="card p-8 mb-2 border border-surface-200 dark:border-surface-700 relative overflow-hidden flex items-center justify-between group bg-surface-0 dark:bg-surface-900 shadow-sm hover:shadow-md transition-shadow">
+      <div class="absolute -right-10 -top-10 w-48 h-48 bg-primary-500/5 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-1000"></div>
+      <div class="absolute right-20 bottom-0 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl group-hover:-translate-x-10 transition-transform duration-1000"></div>
+      <div class="relative z-10 w-full">
+        <div class="text-surface-500 dark:text-surface-400 font-medium mb-3 uppercase tracking-widest text-xs flex items-center gap-2">
+          <i class="pi pi-sparkles text-primary"></i>
+          ORGANIZATION AI FINANCIAL ASSISTANT
+        </div>
+        <h1 class="text-3xl text-surface-900 dark:text-surface-0 font-extrabold mb-1 mt-0 tracking-tight">Organization Financial Management</h1>
+        <p class="text-surface-600 dark:text-surface-400 m-0 max-w-xl leading-relaxed">Analyze organization finances, manage expenses, and get AI-powered insights for better decision making</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Tabs -->
+  <div class="col-span-12">
+    <p-tabs [value]="activeTab()" class="financial-tabs">
+      <p-tablist>
+        <p-tab [value]="0"><i class="pi pi-chart-bar mr-2"></i> Organization Bank Analysis</p-tab>
+        <p-tab [value]="1"><i class="pi pi-wallet mr-2"></i> Expense Analysis</p-tab>
+        <p-tab [value]="2"><i class="pi pi-comments mr-2"></i> Financial Advisor</p-tab>
+        <p-tab [value]="3"><i class="pi pi-file mr-2"></i> Smart Bill Analyzer</p-tab>
+      </p-tablist>
+      <p-tabpanels>
+      <!-- TAB 1: Organization Bank Statement Analysis -->
+      <p-tabpanel [value]="0">
+        <div class="grid grid-cols-12 gap-6 pt-6">
+          
+          <!-- Upload Section -->
+          <div class="col-span-12 lg:col-span-6">
+            <div class="card bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800/30">
+              <div class="flex items-center gap-3 mb-6">
+                <div class="flex items-center justify-center bg-blue-100 dark:bg-blue-800/50 rounded-xl" style="width: 3rem; height: 3rem">
+                  <i class="pi pi-upload text-blue-600 text-xl"></i>
+                </div>
+                <div>
+                  <h3 class="text-xl font-bold text-surface-900 dark:text-surface-0 m-0">Upload Organization Bank Statement</h3>
+                  <p class="text-sm text-surface-600 dark:text-surface-400 m-0 mt-1">PDF, JPG, or PNG (Max 5MB)</p>
+                </div>
+              </div>
+
+              <p-fileUpload
+                name="orgBankStatement"
+                [multiple]="false"
+                accept="image/*,.pdf"
+                [maxFileSize]="5000000"
+                [showUploadButton]="false"
+                [showCancelButton]="false"
+                (onSelect)="onOrgBankStatementSelect($event)"
+                customUpload="true">
+                <ng-template pTemplate="content">
+                  <ul *ngIf="orgBankStatementFile" class="p-0 m-0 list-none">
+                    <li class="flex items-center justify-between p-4 bg-surface-0 dark:bg-surface-900 rounded-lg border border-surface-200 dark:border-surface-700">
+                      <div class="flex items-center gap-3">
+                        <i class="pi pi-file text-primary text-2xl"></i>
+                        <div>
+                          <span class="block font-medium text-surface-900 dark:text-surface-0">{{ orgBankStatementFile.name }}</span>
+                          <span class="text-sm text-surface-500">{{ (orgBankStatementFile.size / 1024).toFixed(2) }} KB</span>
+                        </div>
+                      </div>
+                      <i class="pi pi-check text-green-500 text-xl"></i>
+                    </li>
+                  </ul>
+                </ng-template>
+              </p-fileUpload>
+
+              <p-button 
+                label="Analyze Organization Bank Statement" 
+                icon="pi pi-bolt"
+                [loading]="orgBankStatementLoading()"
+                [disabled]="!orgBankStatementFile || orgBankStatementLoading()"
+                (click)="analyzeOrgBankStatement()"
+                class="w-full mt-4">
+              </p-button>
+            </div>
+          </div>
+
+          <!-- Results Section -->
+          <div class="col-span-12 lg:col-span-6">
+            <ng-container *ngIf="orgAnalysisData">
+              <!-- Account Details Card -->
+              <div class="card bg-gradient-to-br from-green-500/10 to-emerald-500/5 border-l-4 border-green-500 mb-4">
+                <div class="flex justify-between items-start mb-4">
+                  <div>
+                    <span class="block text-green-600 dark:text-green-400 font-medium mb-2 uppercase text-xs tracking-wider">Organization Account</span>
+                    <div class="text-green-900 dark:text-green-100 font-bold text-2xl">{{ orgBankStatementData?.bankName }}</div>
+                    <div class="text-sm text-green-700 dark:text-green-300 mt-1">Account: {{ orgBankStatementData?.accountNumber }}</div>
+                  </div>
+                  <div class="bg-green-100 dark:bg-green-900/40 p-3 rounded-xl">
+                    <i class="pi pi-building text-green-600 text-2xl"></i>
+                  </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-green-200 dark:border-green-800">
+                  <div class="flex justify-between items-center">
+                    <span class="text-green-700 dark:text-green-300 font-medium">Current Balance</span>
+                    <span class="text-green-900 dark:text-green-100 font-bold text-lg">{{ formatCurrency(orgBankStatementData?.balance || 0) }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Financial Health Card -->
+              <div class="card bg-gradient-to-br from-blue-500/10 to-cyan-500/5 border-l-4 border-blue-500">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <span class="block text-blue-600 dark:text-blue-400 font-medium mb-2 uppercase text-xs tracking-wider">Organization Financial Health</span>
+                    <p-tag 
+                      [value]="orgAnalysisData.financialHealthScore" 
+                      [severity]="getHealthScoreColor(orgAnalysisData.financialHealthScore)"
+                      [rounded]="true"
+                      icon="pi pi-heart">
+                    </p-tag>
+                  </div>
+                  <div class="bg-blue-100 dark:bg-blue-900/40 p-3 rounded-xl">
+                    <i class="pi pi-heart text-blue-600 text-2xl"></i>
+                  </div>
+                </div>
+                <div class="mt-4 grid grid-cols-2 gap-3">
+                  <div class="bg-surface-0 dark:bg-surface-900 p-3 rounded-lg">
+                    <span class="text-xs text-surface-500 uppercase">Total Income</span>
+                    <div class="font-bold text-green-600 dark:text-green-400">{{ formatCurrency(orgAnalysisData.totalIncome) }}</div>
+                  </div>
+                  <div class="bg-surface-0 dark:bg-surface-900 p-3 rounded-lg">
+                    <span class="text-xs text-surface-500 uppercase">Total Expenses</span>
+                    <div class="font-bold text-red-600 dark:text-red-400">{{ formatCurrency(orgAnalysisData.totalExpenses) }}</div>
+                  </div>
+                  <div class="bg-surface-0 dark:bg-surface-900 p-3 rounded-lg col-span-2">
+                    <span class="text-xs text-surface-500 uppercase">Savings Rate</span>
+                    <div class="font-bold text-blue-600 dark:text-blue-400">{{ orgAnalysisData.savingsRate }}%</div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="!orgAnalysisData && !orgBankStatementLoading()">
+              <div class="card flex flex-col items-center justify-center py-12 text-center">
+                <i class="pi pi-inbox text-4xl text-surface-300 dark:text-surface-600 mb-4"></i>
+                <span class="text-surface-500 dark:text-surface-400 font-medium">Upload an organization bank statement to see analysis results</span>
+              </div>
+            </ng-container>
+          </div>
+
+          <!-- Charts and Recommendations -->
+          <ng-container *ngIf="orgAnalysisData">
+            <!-- Expense Chart -->
+            <div class="col-span-12 lg:col-span-6">
+              <div class="card">
+                <h3 class="text-xl font-bold text-surface-900 dark:text-surface-0 mb-4 flex items-center gap-2">
+                  <i class="pi pi-chart-pie text-primary"></i>
+                  Organization Expenses by Category
+                </h3>
+                <p-chart type="pie" [data]="orgChartData" [options]="{ responsive: true, maintainAspectRatio: true }"></p-chart>
+              </div>
+            </div>
+
+            <!-- Recommendations -->
+            <div class="col-span-12 lg:col-span-6">
+              <div class="card">
+                <h3 class="text-xl font-bold text-surface-900 dark:text-surface-0 mb-4 flex items-center gap-2">
+                  <i class="pi pi-lightbulb text-amber-500"></i>
+                  Organization Recommendations
+                </h3>
+                <div class="space-y-3">
+                  <div *ngFor="let rec of orgAnalysisData.recommendations" class="flex items-start gap-3 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-100 dark:border-amber-800/30">
+                    <i class="pi pi-check text-amber-600 text-lg mt-1 flex-shrink-0"></i>
+                    <span class="text-surface-700 dark:text-surface-300">{{ rec }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </p-tabpanel>
+
+      <!-- TAB 2: Expense Analysis -->
+      <p-tabpanel [value]="1">
+        <div class="grid grid-cols-12 gap-6 pt-6">
+          
+          <!-- Expense Chart -->
+          <div class="col-span-12 lg:col-span-6">
+            <div class="card">
+              <div class="flex items-center gap-3 mb-6">
+                <div class="flex items-center justify-center bg-orange-100 dark:bg-orange-800/50 rounded-xl" style="width: 3rem; height: 3rem">
+                  <i class="pi pi-chart-bar text-orange-600 text-xl"></i>
+                </div>
+                <div>
+                  <h3 class="text-xl font-bold text-surface-900 dark:text-surface-0 m-0">Monthly Expenses</h3>
+                  <p class="text-sm text-surface-600 dark:text-surface-400 m-0 mt-1">Organization expense breakdown</p>
+                </div>
+              </div>
+              <p-chart type="pie" [data]="expenseChartData" [options]="{ responsive: true, maintainAspectRatio: true }"></p-chart>
+            </div>
+          </div>
+
+          <!-- Expense Summary Cards -->
+          <div class="col-span-12 lg:col-span-6 space-y-4">
+            <div class="card bg-gradient-to-br from-orange-500/10 to-amber-500/5 border-l-4 border-orange-500">
+              <div class="flex justify-between items-start">
+                <div>
+                  <span class="block text-orange-600 dark:text-orange-400 font-medium mb-2 uppercase text-xs tracking-wider">Total Monthly Expenses</span>
+                  <div class="text-orange-900 dark:text-orange-100 font-bold text-3xl">
+                    {{ formatCurrency(getTotalExpenses()) }}
+                  </div>
+                </div>
+                <div class="bg-orange-100 dark:bg-orange-900/40 p-3 rounded-xl">
+                  <i class="pi pi-wallet text-orange-600 text-2xl"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="card bg-gradient-to-br from-red-500/10 to-pink-500/5 border-l-4 border-red-500">
+              <div class="flex justify-between items-start">
+                <div>
+                  <span class="block text-red-600 dark:text-red-400 font-medium mb-2 uppercase text-xs tracking-wider">Highest Expense Category</span>
+                  <div class="text-red-900 dark:text-red-100 font-bold text-2xl">
+                    {{ expenseTableData[0]?.category }}
+                  </div>
+                  <div class="text-sm text-red-700 dark:text-red-300 mt-1">{{ expenseTableData[0]?.percentage }}% of total</div>
+                </div>
+                <div class="bg-red-100 dark:bg-red-900/40 p-3 rounded-xl">
+                  <i class="pi pi-exclamation-circle text-red-600 text-2xl"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Expense Table -->
+          <div class="col-span-12">
+            <div class="card">
+              <h3 class="text-xl font-bold text-surface-900 dark:text-surface-0 mb-4 flex items-center gap-2">
+                <i class="pi pi-table text-primary"></i>
+                Expense Breakdown
+              </h3>
+              <p-table [value]="expenseTableData" [tableStyle]="{ 'min-width': '50rem' }" responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th pSortableColumn="category">Category <p-sortIcon field="category"></p-sortIcon></th>
+                    <th pSortableColumn="amount">Amount (TND) <p-sortIcon field="amount"></p-sortIcon></th>
+                    <th pSortableColumn="percentage">Percentage <p-sortIcon field="percentage"></p-sortIcon></th>
+                    <th>Trend</th>
+                    <th>Status</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-expense>
+                  <tr>
+                    <td class="font-medium text-surface-900 dark:text-surface-0">{{ expense.category }}</td>
+                    <td class="font-bold text-surface-900 dark:text-surface-0">{{ formatCurrency(expense.amount) }}</td>
+                    <td>
+                      <div class="flex items-center gap-2">
+                        <div class="w-24 bg-surface-200 dark:bg-surface-700 rounded-full h-2">
+                          <div class="bg-primary-500 h-full rounded-full" [style.width.%]="expense.percentage"></div>
+                        </div>
+                        <span class="text-sm font-medium">{{ expense.percentage }}%</span>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="flex items-center gap-2">
+                        <i [ngClass]="getTrendIcon(expense.trend)" [ngClass]="getTrendColor(expense.trend) === 'danger' ? 'text-red-600' : getTrendColor(expense.trend) === 'success' ? 'text-green-600' : 'text-blue-600'"></i>
+                        <span class="capitalize font-medium" [ngClass]="getTrendColor(expense.trend) === 'danger' ? 'text-red-600' : getTrendColor(expense.trend) === 'success' ? 'text-green-600' : 'text-blue-600'">
+                          {{ expense.trend }}
+                        </span>
+                      </div>
+                    </td>
+                    <td>
+                      <p-tag [value]="expense.status | titlecase" [severity]="expense.status"></p-tag>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </div>
+        </div>
+      </p-tabpanel>
+
+      <!-- TAB 3: Financial Advisor -->
+      <p-tabpanel [value]="2">
+        <div class="grid grid-cols-12 gap-6 pt-6">
+          <div class="col-span-12">
+            <div class="card">
+              <div class="flex items-center gap-3 mb-6">
+                <div class="flex items-center justify-center bg-blue-100 dark:bg-blue-800/50 rounded-xl" style="width: 3rem; height: 3rem">
+                  <i class="pi pi-comments text-blue-600 text-xl"></i>
+                </div>
+                <div>
+                  <h3 class="text-xl font-bold text-surface-900 dark:text-surface-0 m-0">Organization Financial Advisor</h3>
+                  <p class="text-sm text-surface-600 dark:text-surface-400 m-0 mt-1">Ask questions about your organization finances and get AI-powered advice</p>
+                </div>
+              </div>
+
+              <!-- Chat Messages -->
+              <div class="bg-surface-50 dark:bg-surface-900 rounded-lg p-4 mb-4 h-96 overflow-y-auto border border-surface-200 dark:border-surface-700">
+                <div *ngIf="chatMessages.length === 0" class="flex flex-col items-center justify-center h-full text-center">
+                  <i class="pi pi-inbox text-4xl text-surface-300 dark:text-surface-600 mb-4"></i>
+                  <span class="text-surface-500 dark:text-surface-400">Start a conversation by asking a question</span>
+                </div>
+
+                <div *ngFor="let msg of chatMessages" class="mb-4" [ngClass]="{'text-right': msg.role === 'user'}">
+                  <div class="inline-block max-w-xs lg:max-w-md px-4 py-2 rounded-lg" 
+                       [ngClass]="msg.role === 'user' 
+                         ? 'bg-primary-500 text-white rounded-br-none' 
+                         : 'bg-surface-200 dark:bg-surface-700 text-surface-900 dark:text-surface-0 rounded-bl-none'">
+                    {{ msg.content }}
+                  </div>
+                  <div class="text-xs text-surface-500 mt-1">{{ msg.timestamp | date:'short' }}</div>
+                </div>
+
+                <div *ngIf="chatLoading()" class="flex items-center gap-2">
+                  <div class="w-2 h-2 bg-primary-500 rounded-full animate-bounce"></div>
+                  <div class="w-2 h-2 bg-primary-500 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                  <div class="w-2 h-2 bg-primary-500 rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+                </div>
+              </div>
+
+              <!-- Input Form -->
+              <form [formGroup]="chatForm" (ngSubmit)="askQuestion()" class="flex gap-2">
+                <input 
+                  pInputText 
+                  formControlName="question"
+                  placeholder="Ask an organization financial question..."
+                  class="flex-1"
+                  [disabled]="chatLoading()" />
+                <p-button 
+                  type="submit"
+                  icon="pi pi-send"
+                  [loading]="chatLoading()"
+                  [disabled]="chatForm.invalid || chatLoading()">
+                </p-button>
+                <p-button 
+                  type="button"
+                  icon="pi pi-trash"
+                  severity="secondary"
+                  (click)="clearChat()"
+                  [disabled]="chatMessages.length === 0">
+                </p-button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </p-tabpanel>
+
+      <!-- TAB 4: Smart Bill Analyzer -->
+      <p-tabpanel [value]="3">
+        <div class="grid grid-cols-12 gap-6 pt-6">
+          
+          <!-- Upload Section -->
+          <div class="col-span-12 lg:col-span-6">
+            <div class="card bg-orange-50 dark:bg-orange-900/20 border border-orange-100 dark:border-orange-800/30">
+              <div class="flex items-center gap-3 mb-6">
+                <div class="flex items-center justify-center bg-orange-100 dark:bg-orange-800/50 rounded-xl" style="width: 3rem; height: 3rem">
+                  <i class="pi pi-upload text-orange-600 text-xl"></i>
+                </div>
+                <div>
+                  <h3 class="text-xl font-bold text-surface-900 dark:text-surface-0 m-0">Upload Organization Bill</h3>
+                  <p class="text-sm text-surface-600 dark:text-surface-400 m-0 mt-1">PDF, JPG, or PNG (Max 5MB)</p>
+                </div>
+              </div>
+
+              <p-fileUpload
+                name="bill"
+                [multiple]="false"
+                accept="image/*,.pdf"
+                [maxFileSize]="5000000"
+                [showUploadButton]="false"
+                [showCancelButton]="false"
+                (onSelect)="onBillSelect($event)"
+                customUpload="true">
+                <ng-template pTemplate="content">
+                  <ul *ngIf="billFile" class="p-0 m-0 list-none">
+                    <li class="flex items-center justify-between p-4 bg-surface-0 dark:bg-surface-900 rounded-lg border border-surface-200 dark:border-surface-700">
+                      <div class="flex items-center gap-3">
+                        <i class="pi pi-file text-primary text-2xl"></i>
+                        <div>
+                          <span class="block font-medium text-surface-900 dark:text-surface-0">{{ billFile.name }}</span>
+                          <span class="text-sm text-surface-500">{{ (billFile.size / 1024).toFixed(2) }} KB</span>
+                        </div>
+                      </div>
+                      <i class="pi pi-check text-green-500 text-xl"></i>
+                    </li>
+                  </ul>
+                </ng-template>
+              </p-fileUpload>
+
+              <p-button 
+                label="Analyze Bill" 
+                icon="pi pi-bolt"
+                [loading]="billLoading()"
+                [disabled]="!billFile || billLoading()"
+                (click)="analyzeSmartBill()"
+                class="w-full mt-4">
+              </p-button>
+            </div>
+          </div>
+
+          <!-- Results Section -->
+          <div class="col-span-12 lg:col-span-6">
+            <ng-container *ngIf="billAnalysisData">
+              <!-- Bill Details Card -->
+              <div class="card bg-gradient-to-br from-purple-500/10 to-pink-500/5 border-l-4 border-purple-500 mb-4">
+                <div class="flex justify-between items-start mb-4">
+                  <div>
+                    <span class="block text-purple-600 dark:text-purple-400 font-medium mb-2 uppercase text-xs tracking-wider">Bill Details</span>
+                    <div class="text-purple-900 dark:text-purple-100 font-bold text-2xl">{{ billAnalysisData.billData.provider }}</div>
+                    <div class="text-sm text-purple-700 dark:text-purple-300 mt-1">{{ formatDate(billAnalysisData.billData.date) }}</div>
+                  </div>
+                  <div class="bg-purple-100 dark:bg-purple-900/40 p-3 rounded-xl">
+                    <i class="pi pi-file text-purple-600 text-2xl"></i>
+                  </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-purple-200 dark:border-purple-800">
+                  <div class="flex justify-between items-center">
+                    <span class="text-purple-700 dark:text-purple-300 font-medium">Amount</span>
+                    <span class="text-purple-900 dark:text-purple-100 font-bold text-lg">{{ formatCurrency(billAnalysisData.billData.amount) }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Category & Trend Card -->
+              <div class="card bg-gradient-to-br from-teal-500/10 to-cyan-500/5 border-l-4 border-teal-500">
+                <div class="flex justify-between items-start mb-4">
+                  <div>
+                    <span class="block text-teal-600 dark:text-teal-400 font-medium mb-2 uppercase text-xs tracking-wider">Category</span>
+                    <p-tag 
+                      [value]="billAnalysisData.smartCategory" 
+                      severity="info"
+                      [rounded]="true"
+                      icon="pi pi-tag">
+                    </p-tag>
+                  </div>
+                  <div class="bg-teal-100 dark:bg-teal-900/40 p-3 rounded-xl">
+                    <i class="pi pi-tag text-teal-600 text-2xl"></i>
+                  </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-teal-200 dark:border-teal-800">
+                  <div class="flex items-center gap-2">
+                    <i [ngClass]="getBillTrendIcon(billAnalysisData.trend)" [ngClass]="getBillTrendColor(billAnalysisData.trend) === 'danger' ? 'text-red-600' : 'text-green-600'"></i>
+                    <span class="font-medium" [ngClass]="getBillTrendColor(billAnalysisData.trend) === 'danger' ? 'text-red-600' : 'text-green-600'">
+                      {{ billAnalysisData.trend === 'INCREASING' ? 'Increasing' : 'Decreasing' }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="!billAnalysisData && !billLoading()">
+              <div class="card flex flex-col items-center justify-center py-12 text-center">
+                <i class="pi pi-inbox text-4xl text-surface-300 dark:text-surface-600 mb-4"></i>
+                <span class="text-surface-500 dark:text-surface-400 font-medium">Upload a bill to see analysis results</span>
+              </div>
+            </ng-container>
+          </div>
+
+          <!-- Optimization Tips -->
+          <ng-container *ngIf="billAnalysisData">
+            <div class="col-span-12">
+              <div class="card">
+                <h3 class="text-xl font-bold text-surface-900 dark:text-surface-0 mb-4 flex items-center gap-2">
+                  <i class="pi pi-lightbulb text-amber-500"></i>
+                  Optimization Tips
+                </h3>
+                <div class="space-y-3">
+                  <div *ngFor="let tip of billAnalysisData.optimizationTips" class="flex items-start gap-3 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-100 dark:border-amber-800/30">
+                    <i class="pi pi-check text-amber-600 text-lg mt-1 flex-shrink-0"></i>
+                    <span class="text-surface-700 dark:text-surface-300">{{ tip }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </p-tabpanel>
+
+      </p-tabpanels>
+    </p-tabs>
+  </div>
+</div>
